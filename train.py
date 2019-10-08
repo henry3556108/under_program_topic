@@ -11,7 +11,7 @@ import argparse
 np.random.seed(10)
 downscale_factor = 4
 # 圖片的大小在這個改變
-image_shape = (384,384,3)
+image_shape = (1024,1024,3)
 
 
 def get_gan_network(discriminator, shape, generator, optimizer, vgg_loss):
@@ -85,8 +85,8 @@ def train(epochs, batch_size, input_dir, output_dir, model_save_dir, number_of_i
 
         if e == 1 or e % 5 == 0:
             Utils.plot_generated_images(output_dir, e, generator, x_test_hr, x_test_lr)
-        if e % 500 == 0:
+        if e % 1 == 0:
             generator.save(model_save_dir + 'gen_model%d.h5' % e)
             discriminator.save(model_save_dir + 'dis_model%d.h5' % e)
 
-train(500, 32, "dataset", "output", "model", 100, 0.8)
+train(5, 32, "crop", "output", "model", 100, 0.8)
