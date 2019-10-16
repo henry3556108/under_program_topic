@@ -5,13 +5,14 @@ from Utils_model import VGG_LOSS
 from keras.models import Model
 from keras.layers import Input
 from tqdm import tqdm
+from keras.utils import plot_model
 import numpy as np
 import argparse
 
 np.random.seed(10)
 downscale_factor = 4
 # 圖片的大小在這個改變
-image_shape = (1024,1024,3)
+image_shape = (64,64,3)
 
 
 def get_gan_network(discriminator, shape, generator, optimizer, vgg_loss):
@@ -36,7 +37,7 @@ def train(epochs, batch_size, input_dir, output_dir, model_save_dir, number_of_i
     
     generator = Generator(shape).generator()
     discriminator = Discriminator(image_shape).discriminator()
-
+    plot_model(discriminator, "d-model-2.png")
     optimizer = Utils_model.get_optimizer()
     generator.compile(loss=loss.vgg_loss, optimizer=optimizer)
     discriminator.compile(loss="binary_crossentropy", optimizer=optimizer)
@@ -73,8 +74,9 @@ def train(epochs, batch_size, input_dir, output_dir, model_save_dir, number_of_i
             gan_Y = np.ones(batch_size) - np.random.random_sample(batch_size)*0.2
             discriminator.trainable = False
             gan_loss = gan.train_on_batch(image_batch_lr, [image_batch_hr,gan_Y])
-            
-            
+            gan_names = gan.metrics_names
+            print(gan_names)
+            break
         print("discriminator loss : %f" % discriminator_loss)
         print("gan_loss :", gan_loss)
         gan_loss = str(gan_loss)
@@ -82,11 +84,11 @@ def train(epochs, batch_size, input_dir, output_dir, model_save_dir, number_of_i
         loss_file = open(model_save_dir + 'losses.txt' , 'a')
         loss_file.write('epoch%d : gan_loss = %s ; discriminator loss = %f\n' %(e, gan_loss, discriminator_loss) )
         loss_file.close()
-
-        if e == 1 or e % 5 == 0:
+        break
+        if e == 1 or e % 20 == 0:
             Utils.plot_generated_images(output_dir, e, generator, x_test_hr, x_test_lr)
-        if e % 1 == 0:
+        if e % 10 == 0:
             generator.save(model_save_dir + 'gen_model%d.h5' % e)
             discriminator.save(model_save_dir + 'dis_model%d.h5' % e)
 
-train(5, 32, "crop", "output", "model", 100, 0.8)
+train(1, 1, "crop", "output/", "model/", 80, 0.8)

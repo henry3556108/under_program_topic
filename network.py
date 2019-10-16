@@ -72,14 +72,18 @@ class Discriminator(object):
         model = Conv2D(filters=64, kernel_size=3,
                        strides=1, padding="same")(dis_input)
         model = LeakyReLU(alpha=0.2)(model)
-
-        model = discriminator_block(model, 64, 3, 2)
-        model = discriminator_block(model, 128, 3, 1)
-        model = discriminator_block(model, 128, 3, 2)
-        model = discriminator_block(model, 256, 3, 1)
-        model = discriminator_block(model, 256, 3, 2)
-        model = discriminator_block(model, 512, 3, 1)
-        model = discriminator_block(model, 512, 3, 2)
+        for _ in range(5):
+            model = discriminator_block(model, 64*(_+1), 3, 2)
+            model = res_block_gen(model, 3, 64*(_+1), 1)
+        # for _ in range(16):
+        #     model = res_block_gen(model, 3, 64, 1)
+        # model = discriminator_block(model, 64, 3, 2)
+        # model = discriminator_block(model, 128, 3, 1)
+        # model = discriminator_block(model, 128, 3, 2)
+        # model = discriminator_block(model, 256, 3, 1)
+        # model = discriminator_block(model, 256, 3, 2)
+        # model = discriminator_block(model, 512, 3, 1)
+        # model = discriminator_block(model, 512, 3, 2)
 
         model = Flatten()(model)
         model = Dense(1024)(model)
