@@ -1,9 +1,3 @@
-#title           :Utils_model.py
-#description     :Have functions to get optimizer and loss
-#author          :Deepak Birla
-#date            :2018/10/30
-#usage           :imported in other files
-#python_version  :3.5.4
 
 from keras.applications.vgg19 import VGG19
 import keras.backend as K

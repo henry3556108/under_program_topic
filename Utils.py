@@ -1,11 +1,3 @@
-#!/usr/bin/env python
-#title           :Utils.py
-# description     :Have helper functions to process images and plot images
-# author          :Deepak Birla
-#date            :2018/10/30
-# usage           :imported in other files
-# python_version  :3.5.4
-
 from keras.layers import Lambda
 import tensorflow as tf
 from skimage import data, io, filters
@@ -18,9 +10,6 @@ import sys
 
 import matplotlib.pyplot as plt
 plt.switch_backend('agg')
-
-# Subpixel Conv will upsample from (h, w, c) to (h/r, w/r, c/r^2)
-
 
 def SubpixelConv2D(input_shape, scale=4):
     def subpixel_shape(input_shape):
@@ -197,9 +186,6 @@ def plot_generated_images(output_dir, epoch, generator, x_test_hr, x_test_lr, di
     plt.savefig(output_dir + 'generated_image_%d.png' % epoch)
 
     # plt.show()
-
-# Plots and save generated images(in form LR, SR, HR) from model to test the model
-# Save output for all images given for testing
 
 
 def plot_test_generated_images_for_model(output_dir, generator, x_test_hr, x_test_lr, dim=(1, 3), figsize=(15, 5)):
